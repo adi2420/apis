@@ -1,33 +1,33 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Shipments = require("../models/shipments");
-const Customers = require("../models/customers");
-const Orders = require("../models/orders");
+const Shipments = require('../models/shipments');
+const Customers = require('../models/customers');
+const Orders = require('../models/orders');
 
-router.get("/details", async (req, res) => {
+router.get('/details', async (req, res) => {
   let final = [];
   let custs = await Customers.find({});
   for (var cust in custs) {
     let details = {};
-    details["Customer Details"] = custs[cust];
+    details['Customer Details'] = custs[cust];
     // customs.push(custs[cust]);
     let order = await Orders.find({ cID: custs[cust]._id });
     let orders = [];
     for (ord in order) {
       orders.push(order[ord]);
     }
-    details["Purchase Order"] = orders;
+    details['Purchase Order'] = orders;
     final.push(details);
   }
   res.send(final);
 });
 
-router.get("/allDetails", async (req, res) => {
+router.get('/allDetails', async (req, res) => {
   let final = [];
   let custs = await Customers.find({}, { __v: 0 });
   for (var cust in custs) {
     let details = {};
-    details["Customer Details"] = custs[cust];
+    details['Customer Details'] = custs[cust];
     let order = await Orders.find({ cID: custs[cust]._id }, { cID: 0 });
     let orders = [];
     let ships = [];
@@ -36,14 +36,14 @@ router.get("/allDetails", async (req, res) => {
       ships.push(ship);
       orders.push(order[ord]);
     }
-    details["Purchase Details"] = orders;
-    details["Shipment Details"] = ships;
+    details['Purchase Details'] = orders;
+    details['Shipment Details'] = ships;
     final.push(details);
   }
   res.send(final);
 });
 
-router.post("/", (req, res) => {
+router.post('/', (req, res) => {
   let { name, email, phno, city } = req.body;
   const newCust = Customers.create({
     name,
@@ -54,7 +54,7 @@ router.post("/", (req, res) => {
   res.end();
 });
 
-router.get("/:place", async (req, res) => {
+router.get('/:place', async (req, res) => {
   let city = req.params.place;
   var custs = [];
   let ships = await Shipments.find({ city: city });
@@ -65,7 +65,7 @@ router.get("/:place", async (req, res) => {
     }
     res.json(custs);
   } else {
-    res.send("No shipments found in this city...");
+    res.send('No shipments found in this city...');
   }
 });
 

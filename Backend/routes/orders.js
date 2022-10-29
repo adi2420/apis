@@ -1,11 +1,11 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Orders = require("../models/orders");
+const Orders = require('../models/orders');
 
-router.post("/:cid", (req, res) => {
+router.post('/:cid', (req, res) => {
   let cid = req.params.cid;
   let { pname, quantity, pricing, mrp } = req.body;
-  if (pricing < mrp) {
+  if (parseInt(pricing) < parseInt(mrp)) {
     const newOrder = Orders.create({
       pname,
       quantity,
@@ -15,7 +15,7 @@ router.post("/:cid", (req, res) => {
     });
     res.end();
   } else {
-    res.send("Pricing should be less than MRP");
+    res.send('Pricing should be less than MRP');
   }
 });
 
